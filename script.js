@@ -4,7 +4,7 @@
 */
 
 const gameBoard = (function () {
-    let count = 0;
+    let count = 1;
     const rows = 3;
     const columns = 3;
     const board = [];
@@ -18,5 +18,42 @@ const gameBoard = (function () {
     return board;
 })();
 
-console.log(gameBoard);
+
+function gameController() {
+    let flag = true;
+    const board = gameBoard;
+    // const input = "";
+
+    // if (flag) {
+    //     const input = prompt("Please enter grid coordinates (x,y):");
+    //     const coordinates = input.split(/[\s,]+/);
+
+    //     const row = coordinates[0];
+    //     const col = coordinates[1];
+
+    //     board[row][col] = "x";
+    //     console.log(board);
+    //     // console.log(board[row][col]);
+    //     flat = false;
+    // }
+
+    for (let i = 0; i < 4; i++) {
+        const input = prompt("Please enter grid coordinates (x,y):");
+        const coordinates = input.split(/[\s,]+/);
+
+        const row = coordinates[0];
+        const col = coordinates[1];
+
+        board[row][col] = "x";
+        console.log(board);
+        // console.log(board[row][col]);
+        flat = false;
+    }
+
+};
+
+// gameController();
+
+// console.log(gameBoard);
+// console.log(gameBoard[2][1]);
 
