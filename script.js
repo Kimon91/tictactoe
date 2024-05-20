@@ -1,5 +1,5 @@
 /* 1 2 3
-   4 5 6
+   4 5 6   sum of 3 numbers needs to %3 = 0 ???
    7 8 9
 */
 
@@ -18,38 +18,49 @@ const gameBoard = (function () {
     return board;
 })();
 
+function createPlayer(name) {
+    const playerName = name;
+    let playerCells = [];
+
+    const getName = () => playerName;
+    const setCells = function (cellNumber) {
+        playerCells.push(cellNumber);
+    }
+    const getCells = () => playerCells;
+
+    return { getName, setCells, getCells };
+}
+
+
 
 function gameController() {
-    let flag = true;
     const board = gameBoard;
-    // const input = "";
+    const player1 = createPlayer("Kimon");
+    const player2 = createPlayer("Machine");
+    let overwriteFlag = true;
 
-    // if (flag) {
-    //     const input = prompt("Please enter grid coordinates (x,y):");
-    //     const coordinates = input.split(/[\s,]+/);
+    for (let i = 0; i < 2; i++) {
+        let input = prompt(` ${player1.getName()} Please enter grid coordinates (x,y):`);
+        let coordinates = input.split(/[\s,]+/);
 
-    //     const row = coordinates[0];
-    //     const col = coordinates[1];
+        let row = coordinates[0];
+        let col = coordinates[1];
 
-    //     board[row][col] = "x";
-    //     console.log(board);
-    //     // console.log(board[row][col]);
-    //     flat = false;
-    // }
+        board[row][col] = `${player1.getName()}`;
 
-    for (let i = 0; i < 4; i++) {
-        const input = prompt("Please enter grid coordinates (x,y):");
-        const coordinates = input.split(/[\s,]+/);
+        input = prompt(` ${player2.getName()} Please enter grid coordinates (x,y):`);
+        coordinates = input.split(/[\s,]+/);
 
-        const row = coordinates[0];
-        const col = coordinates[1];
+        row = coordinates[0];
+        col = coordinates[1];
 
-        board[row][col] = "x";
+        board[row][col] = `${player2.getName()}`;
+
         console.log(board);
         // console.log(board[row][col]);
-        flat = false;
     }
 
+    console.log(board);
 };
 
 // gameController();
