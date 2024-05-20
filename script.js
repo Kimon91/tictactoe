@@ -37,9 +37,11 @@ function gameController() {
     const board = gameBoard;
     const player1 = createPlayer("Kimon");
     const player2 = createPlayer("Machine");
-    let overwriteFlag = true;
+
 
     for (let i = 0; i < 2; i++) {
+        let overwriteFlag = true; //flag to check if cell is already taken
+
         let input = prompt(` ${player1.getName()} Please enter grid coordinates (x,y):`);
         let coordinates = input.split(/[\s,]+/);
 
@@ -48,19 +50,24 @@ function gameController() {
 
         board[row][col] = `${player1.getName()}`;
 
-        input = prompt(` ${player2.getName()} Please enter grid coordinates (x,y):`);
-        coordinates = input.split(/[\s,]+/);
-
-        row = coordinates[0];
-        col = coordinates[1];
-
+        do {
+            input = prompt(` ${player2.getName()} Please enter grid coordinates (x,y):`);
+            coordinates = input.split(/[\s,]+/);
+            row = coordinates[0];
+            col = coordinates[1];
+            if (board[row][col] == player1.getName()) {
+                console.log("This cell is taken, choosing another...");
+                overwriteFlag = true;
+            }
+            else {
+                overwriteFlag = false;
+            }
+        } while (overwriteFlag);
         board[row][col] = `${player2.getName()}`;
-
         console.log(board);
         // console.log(board[row][col]);
     }
-
-    console.log(board);
+    // console.log(board);
 };
 
 // gameController();
