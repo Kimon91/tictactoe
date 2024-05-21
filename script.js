@@ -1,6 +1,9 @@
-/* 1 2 3
-   4 5 6   sum of 3 numbers needs to %3 = 0 ???
-   7 8 9
+
+/*    0 1 2
+
+  0   1 2 3
+  1   4 5 6   
+  2   7 8 9
 */
 
 const gameBoard = (function () {
@@ -12,7 +15,7 @@ const gameBoard = (function () {
     for (let i = 0; i < rows; i++) {
         board[i] = [];
         for (let j = 0; j < columns; j++) {
-            board[i][j] = count++;
+            board[i][j] = "";
         }
     }
     return board;
@@ -31,17 +34,43 @@ function createPlayer(name) {
     return { getName, setCells, getCells };
 }
 
+function checkScore(board, playerName) {
+    for (let i = 0; i < 3; i++) {
+        if (board[i][0] == playerName && board[i][1] == playerName && board[i][2] == playerName) {
+            console.log(`${playerName} wins!`);
+            return true;
+        }
+    }
+    for (let j = 0; j < 3; j++) {
+        if (board[0][j] == playerName && board[1][j] == playerName && board[2][j] == playerName) {
+            console.log(`${playerName} wins!`);
+            return true;
+        }
+    }
+    if (board[0][0] === playerName && board[1][1] === playerName && board[2][2] === playerName) {
+        console.log(`${playerName} wins!`);
+        return true;
+    }
+
+    if (board[0][2] === playerName && board[1][1] === playerName && board[2][0] === playerName) {
+        console.log(`${playerName} wins!`);
+        return true;
+    }
+}
+
 
 
 function gameController() {
+    let count = 0;
     const board = gameBoard;
     const player1 = createPlayer("Kimon");
     const player2 = createPlayer("Machine");
 
 
-    for (let i = 0; i < 2; i++) {
+    while (true) {
         let overwriteFlag = true; //flag to check if cell is already taken
 
+        // player 1 turn
         let input = prompt(` ${player1.getName()} Please enter grid coordinates (x,y):`);
         let coordinates = input.split(/[\s,]+/);
 
@@ -49,12 +78,22 @@ function gameController() {
         let col = coordinates[1];
 
         board[row][col] = `${player1.getName()}`;
+        if (checkScore(board, player1.getName())) break;
+        // Check if board is full (for a draw)
+        count++;
+        if (count >= 9) {
+            console.log("Game ends in a draw.");
+            break;
+        }
 
+        // player 2 turn
         do {
             input = prompt(` ${player2.getName()} Please enter grid coordinates (x,y):`);
             coordinates = input.split(/[\s,]+/);
             row = coordinates[0];
             col = coordinates[1];
+
+            //checking to see if cell is taken
             if (board[row][col] == player1.getName()) {
                 console.log("This cell is taken, choosing another...");
                 overwriteFlag = true;
@@ -63,15 +102,19 @@ function gameController() {
                 overwriteFlag = false;
             }
         } while (overwriteFlag);
+
         board[row][col] = `${player2.getName()}`;
+        if (checkScore(board, player2.getName())) break;
+        // Check if board is full (for a draw)
+        count++;
+        if (count >= 9) {
+            console.log("Game ends in a draw.");
+            break;
+        }
         console.log(board);
-        // console.log(board[row][col]);
     }
-    // console.log(board);
 };
 
 // gameController();
 
-// console.log(gameBoard);
-// console.log(gameBoard[2][1]);
 
