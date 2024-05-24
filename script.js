@@ -1,5 +1,8 @@
 
-/*    0 1 2
+/*
+      0 1 2| 3 4 5| 6 7 8 
+
+      0 1 2
 
   0   1 2 3
   1   4 5 6   
@@ -7,6 +10,7 @@
 */
 
 const gameBoard = (function () {
+
     let count = 1;
     const rows = 3;
     const columns = 3;
@@ -21,8 +25,9 @@ const gameBoard = (function () {
     return board;
 })();
 
-function createPlayer(name) {
+function createPlayer(name, symbol) {
     const playerName = name;
+    const playerSymbol = symbol;
     let playerCells = [];
 
     const getName = () => playerName;
@@ -30,6 +35,7 @@ function createPlayer(name) {
         playerCells.push(cellNumber);
     }
     const getCells = () => playerCells;
+    const getPlayerSymbol = () => playerSymbol;
 
     return { getName, setCells, getCells };
 }
@@ -59,19 +65,31 @@ function checkScore(board, playerName) {
 }
 
 
+const displayController = (function () {
+    const gridContainer = document.querySelector(".gridContainer");
+
+    for (let i = 0; i < 9; i++) {
+        const button = document.createElement("button");
+        button.classList.add("gridButton");
+        button.id = i + 1;
+        gridContainer.appendChild(button);
+    }
+})();
+
+
 
 function gameController() {
     let count = 0;
     const board = gameBoard;
-    const player1 = createPlayer("Kimon");
-    const player2 = createPlayer("Machine");
+    const player1 = createPlayer("Kimon", "X");
+    const player2 = createPlayer("Machine", "O");
 
 
     while (true) {
         let overwriteFlag = true; //flag to check if cell is already taken
 
         // player 1 turn
-        let input = prompt(` ${player1.getName()} Please enter grid coordinates (x,y):`);
+        let input = prompt(` ${player1.getName()} it's your turn!`);
         let coordinates = input.split(/[\s,]+/);
 
         let row = coordinates[0];
@@ -115,6 +133,29 @@ function gameController() {
     }
 };
 
+
+
 // gameController();
 
 
+
+// mapping a 1d array to a 2d array
+function boardCheck() {
+    const singleBoard = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+    const doubleBoard = [];
+    let count = 0;
+
+    for (let i = 0; i < 3; i++) {
+        doubleBoard[i] = [];
+        for (let j = 0; j < 3; j++) {
+            doubleBoard[i][j] = singleBoard[count];
+            count++
+        }
+    }
+
+    console.log(singleBoard);
+    console.log(doubleBoard);
+}
+
+boardCheck();
