@@ -9,19 +9,36 @@
   2   7 8 9
 */
 
-const gameBoard = (function () {
+const displayController = (function () {
+    const messageScreen = document.createElement("p");
+    messageScreen.textContent = "This is the message screen!";
 
-    let count = 1;
+    const gridContainer = document.querySelector(".gridContainer");
+    for (let i = 0; i < 9; i++) {
+        const button = document.createElement("button");
+        button.classList.add("gridButton");
+        button.id = i + 1;
+        gridContainer.appendChild(button);
+    }
+    document.body.insertBefore(messageScreen, gridContainer);
+
+    return messageScreen;
+})();
+
+const gameBoard = (function () {
+    const buttonList = document.querySelectorAll("button");
     const rows = 3;
     const columns = 3;
     const board = [];
-
+    let count = 0;
     for (let i = 0; i < rows; i++) {
         board[i] = [];
         for (let j = 0; j < columns; j++) {
-            board[i][j] = "";
+            board[i][j] = buttonList[count];
+            count++;
         }
     }
+    console.log(board);
     return board;
 })();
 
@@ -31,13 +48,17 @@ function createPlayer(name, symbol) {
     let playerCells = [];
 
     const getName = () => playerName;
-    const setCells = function (cellNumber) {
-        playerCells.push(cellNumber);
-    }
-    const getCells = () => playerCells;
+    // const setCells = function (cellNumber) {
+    //     playerCells.push(cellNumber);
+    // }
+    // const getCells = () => playerCells;
     const getPlayerSymbol = () => playerSymbol;
 
-    return { getName, setCells, getCells };
+    const selectCell = function (board) {
+        board.textContent = playerSymbol;
+    }
+
+    return { getName, getPlayerSymbol };
 }
 
 function checkScore(board, playerName) {
@@ -65,16 +86,7 @@ function checkScore(board, playerName) {
 }
 
 
-const displayController = (function () {
-    const gridContainer = document.querySelector(".gridContainer");
 
-    for (let i = 0; i < 9; i++) {
-        const button = document.createElement("button");
-        button.classList.add("gridButton");
-        button.id = i + 1;
-        gridContainer.appendChild(button);
-    }
-})();
 
 
 
@@ -83,19 +95,25 @@ function gameController() {
     const board = gameBoard;
     const player1 = createPlayer("Kimon", "X");
     const player2 = createPlayer("Machine", "O");
+    const screen = displayController;
 
 
     while (true) {
         let overwriteFlag = true; //flag to check if cell is already taken
 
         // player 1 turn
-        let input = prompt(` ${player1.getName()} it's your turn!`);
-        let coordinates = input.split(/[\s,]+/);
+        // let input = prompt(` ${player1.getName()} it's your turn!`);
+        screen.textContent = "Player One it's your turn!";
+        board.flat().forEach(function (element) {
+            element.onclick = (function () {
+                this.textContent = player1.getPlayerSymbol();
+            })
+        })
+        // let coordinates = input.split(/[\s,]+/);
+        // let row = coordinates[0];
+        // let col = coordinates[1];
 
-        let row = coordinates[0];
-        let col = coordinates[1];
-
-        board[row][col] = `${player1.getName()}`;
+        // board[row][col] = `${player1.getName()}`;
         if (checkScore(board, player1.getName())) break;
         // Check if board is full (for a draw)
         count++;
@@ -140,22 +158,22 @@ function gameController() {
 
 
 // mapping a 1d array to a 2d array
-function boardCheck() {
-    const singleBoard = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+// function boardCheck() {
+//     const singleBoard = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
-    const doubleBoard = [];
-    let count = 0;
+//     const doubleBoard = [];
+//     let count = 0;
 
-    for (let i = 0; i < 3; i++) {
-        doubleBoard[i] = [];
-        for (let j = 0; j < 3; j++) {
-            doubleBoard[i][j] = singleBoard[count];
-            count++
-        }
-    }
+//     for (let i = 0; i < 3; i++) {
+//         doubleBoard[i] = [];
+//         for (let j = 0; j < 3; j++) {
+//             doubleBoard[i][j] = singleBoard[count];
+//             count++
+//         }
+//     }
 
-    console.log(singleBoard);
-    console.log(doubleBoard);
-}
+//     console.log(singleBoard);
+//     console.log(doubleBoard);
+// }
 
-boardCheck();
+// boardCheck();
