@@ -27,38 +27,38 @@ const gameBoard = function () {
     return board;
 };
 
-function createPlayer(name, symbol) {
-    const playerName = name;
-    const playerSymbol = symbol;
-    let playerCells = [];
+// function createPlayer(name, symbol) {
+//     const playerName = name;
+//     const playerSymbol = symbol;
+//     let playerCells = [];
 
-    const getName = () => playerName;
-    // const setCells = function (cellNumber) {
-    //     playerCells.push(cellNumber);
-    // }
-    // const getCells = () => playerCells;
-    const getPlayerSymbol = () => playerSymbol;
+//     const getName = () => playerName;
+//     // const setCells = function (cellNumber) {
+//     //     playerCells.push(cellNumber);
+//     // }
+//     // const getCells = () => playerCells;
+//     const getPlayerSymbol = () => playerSymbol;
 
-    const selectCell = function (board) {
-        board.textContent = playerSymbol;
-    }
+//     const selectCell = function (board) {
+//         board.textContent = playerSymbol;
+//     }
 
-    return { getName, getPlayerSymbol };
-}
-
-
+//     return { getName, getPlayerSymbol };
+// }
 
 
 
 
 
 
-function gameController() {
+
+
+function gameController(playerOneName, playerTwoName, screen) {
     let count = 0;
     const board = gameBoard;
-    const player1 = createPlayer("Kimon", "X");
-    const player2 = createPlayer("Machine", "O");
-    const screen = displayController;
+    // const player1 = createPlayer("Kimon", "X");
+    // const player2 = createPlayer("Machine", "O");
+    // const screen = displayController;
 
     const players = [
         {
@@ -66,7 +66,7 @@ function gameController() {
             symbol: "X"
         },
         {
-            name: playerOneName,
+            name: playerTwoName,
             symbol: "O"
         }
     ];
@@ -78,7 +78,9 @@ function gameController() {
     const getActivePlayer = () => activePlayer;
 
     const playRound = function (square) {
+        screen.textContent = `${activePlayer} it's your turn!`;
         square.textContent = activePlayer.symbol;
+        switchPlayerTurn();
     }
 
     function checkScore(board, player) {
@@ -103,6 +105,12 @@ function gameController() {
             console.log(`${player.getName()} wins!`);
             return true;
         }
+    }
+
+    return {
+        getActivePlayer,
+        playRound,
+        checkScore
     }
 
     // while (true) {
@@ -180,6 +188,7 @@ function gameController() {
 
 
 const displayController = (function () {
+
     const messageScreen = document.createElement("p");
     messageScreen.textContent = "This is the message screen!";
 
@@ -189,10 +198,23 @@ const displayController = (function () {
         button.classList.add("gridButton");
         button.id = i + 1;
         gridContainer.appendChild(button);
+        button.addEventListener("click", clickHandler);
     }
     document.body.insertBefore(messageScreen, gridContainer);
 
     const board = gameBoard;
+    const game = gameController("Kimon", "Machine", messageScreen);
+
+    function clickHandler(e) {
+        const selectedSquare = e.target;
+        if (selectedSquare.textContent != "") return;
+        console.log("You Clicked!");
+        game.playRound(selectedSquare);
+    }
+
+
+
+
     console.log(board());
 
     // return messageScreen;
