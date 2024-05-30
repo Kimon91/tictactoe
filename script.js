@@ -78,33 +78,41 @@ function gameController(playerOneName, playerTwoName, screen) {
     const getActivePlayer = () => activePlayer;
 
     const playRound = function (square) {
-        screen.textContent = `${activePlayer} it's your turn!`;
         square.textContent = activePlayer.symbol;
         switchPlayerTurn();
+        screen.textContent = `${activePlayer.name} it's your turn!`;
     }
 
-    function checkScore(board, player) {
+    function checkScore(board, playerSymbol, playerName) {
         for (let i = 0; i < 3; i++) {
-            if (board[i][0] == player.getPlayerSymbol() && board[i][1] == player.getPlayerSymbol() && board[i][2] == player.getPlayerSymbol()) {
-                console.log(`${player.getName()} wins!`);
+            if (board[i][0].textContent == playerSymbol && board[i][1].textContent == playerSymbol && board[i][2].textContent == playerSymbol) {
+                console.log(`${playerName} wins!`);
                 return true;
             }
         }
         for (let j = 0; j < 3; j++) {
-            if (board[0][j] == player.getPlayerSymbol() && board[1][j] == player.getPlayerSymbol() && board[2][j] == player.getPlayerSymbol()) {
-                console.log(`${player.getName()} wins!`);
+            if (board[0][j].textContent == playerSymbol && board[1][j].textContent == playerSymbol && board[2][j].textContent == playerSymbol) {
+                console.log(`${playerName} wins!`);
                 return true;
             }
         }
-        if (board[0][0] === player.getPlayerSymbol() && board[1][1] === player.getPlayerSymbol() && board[2][2] === player.getPlayerSymbol()) {
-            console.log(`${player.getName()} wins!`);
+        if (board[0][0].textContent === playerSymbol && board[1][1].textContent === playerSymbol && board[2][2].textContent === playerSymbol) {
+            console.log(`${playerName} wins!`);
             return true;
         }
 
-        if (board[0][2] === player.getPlayerSymbol() && board[1][1] === player.getPlayerSymbol() && board[2][0] === player.getPlayerSymbol()) {
-            console.log(`${player.getName()} wins!`);
+        if (board[0][2].textContent === playerSymbol && board[1][1].textContent === playerSymbol && board[2][0].textContent === playerSymbol) {
+            console.log(`${playerName} wins!`);
             return true;
         }
+        let count = 0;
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                if (board[i][j].textContent != "") count++;
+                console.log(count);
+            }
+        }
+        if (count >= 9) return true;
     }
 
     return {
@@ -190,7 +198,6 @@ function gameController(playerOneName, playerTwoName, screen) {
 const displayController = (function () {
 
     const messageScreen = document.createElement("p");
-    messageScreen.textContent = "This is the message screen!";
 
     const gridContainer = document.querySelector(".gridContainer");
     for (let i = 0; i < 9; i++) {
@@ -203,13 +210,17 @@ const displayController = (function () {
     document.body.insertBefore(messageScreen, gridContainer);
 
     const board = gameBoard;
-    const game = gameController("Kimon", "Machine", messageScreen);
+    const game = gameController("Player One", "Player Two", messageScreen);
+    messageScreen.textContent = `This is Tic-Tac-Toe! ${game.getActivePlayer().name}, you go first!`;
 
     function clickHandler(e) {
         const selectedSquare = e.target;
         if (selectedSquare.textContent != "") return;
         console.log("You Clicked!");
         game.playRound(selectedSquare);
+        if (game.checkScore(board, game.getActivePlayer().symbol, game.getActivePlayer().name)) {
+            screen.textContent = "Game is over!";
+        }
     }
 
 
