@@ -27,6 +27,7 @@ body {
     background-color: pink;
     width: 1fr;
     height: 10rem;
+    font-size: 8rem;
 }
 
 .gridButton:hover {

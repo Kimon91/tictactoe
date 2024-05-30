@@ -9,23 +9,9 @@
   2   7 8 9
 */
 
-const displayController = (function () {
-    const messageScreen = document.createElement("p");
-    messageScreen.textContent = "This is the message screen!";
 
-    const gridContainer = document.querySelector(".gridContainer");
-    for (let i = 0; i < 9; i++) {
-        const button = document.createElement("button");
-        button.classList.add("gridButton");
-        button.id = i + 1;
-        gridContainer.appendChild(button);
-    }
-    document.body.insertBefore(messageScreen, gridContainer);
 
-    return messageScreen;
-})();
-
-const gameBoard = (function () {
+const gameBoard = function () {
     const buttonList = document.querySelectorAll("button");
     const rows = 3;
     const columns = 3;
@@ -38,9 +24,8 @@ const gameBoard = (function () {
             count++;
         }
     }
-    console.log(board);
     return board;
-})();
+};
 
 function createPlayer(name, symbol) {
     const playerName = name;
@@ -61,29 +46,7 @@ function createPlayer(name, symbol) {
     return { getName, getPlayerSymbol };
 }
 
-function checkScore(board, playerName) {
-    for (let i = 0; i < 3; i++) {
-        if (board[i][0] == playerName && board[i][1] == playerName && board[i][2] == playerName) {
-            console.log(`${playerName} wins!`);
-            return true;
-        }
-    }
-    for (let j = 0; j < 3; j++) {
-        if (board[0][j] == playerName && board[1][j] == playerName && board[2][j] == playerName) {
-            console.log(`${playerName} wins!`);
-            return true;
-        }
-    }
-    if (board[0][0] === playerName && board[1][1] === playerName && board[2][2] === playerName) {
-        console.log(`${playerName} wins!`);
-        return true;
-    }
 
-    if (board[0][2] === playerName && board[1][1] === playerName && board[2][0] === playerName) {
-        console.log(`${playerName} wins!`);
-        return true;
-    }
-}
 
 
 
@@ -97,63 +60,143 @@ function gameController() {
     const player2 = createPlayer("Machine", "O");
     const screen = displayController;
 
-
-    while (true) {
-        let overwriteFlag = true; //flag to check if cell is already taken
-
-        // player 1 turn
-        // let input = prompt(` ${player1.getName()} it's your turn!`);
-        screen.textContent = "Player One it's your turn!";
-        board.flat().forEach(function (element) {
-            element.onclick = (function () {
-                this.textContent = player1.getPlayerSymbol();
-            })
-        })
-        // let coordinates = input.split(/[\s,]+/);
-        // let row = coordinates[0];
-        // let col = coordinates[1];
-
-        // board[row][col] = `${player1.getName()}`;
-        if (checkScore(board, player1.getName())) break;
-        // Check if board is full (for a draw)
-        count++;
-        if (count >= 9) {
-            console.log("Game ends in a draw.");
-            break;
+    const players = [
+        {
+            name: playerOneName,
+            symbol: "X"
+        },
+        {
+            name: playerOneName,
+            symbol: "O"
         }
+    ];
 
-        // player 2 turn
-        do {
-            input = prompt(` ${player2.getName()} Please enter grid coordinates (x,y):`);
-            coordinates = input.split(/[\s,]+/);
-            row = coordinates[0];
-            col = coordinates[1];
-
-            //checking to see if cell is taken
-            if (board[row][col] == player1.getName()) {
-                console.log("This cell is taken, choosing another...");
-                overwriteFlag = true;
-            }
-            else {
-                overwriteFlag = false;
-            }
-        } while (overwriteFlag);
-
-        board[row][col] = `${player2.getName()}`;
-        if (checkScore(board, player2.getName())) break;
-        // Check if board is full (for a draw)
-        count++;
-        if (count >= 9) {
-            console.log("Game ends in a draw.");
-            break;
-        }
-        console.log(board);
+    let activePlayer = players[0];
+    const switchPlayerTurn = () => {
+        activePlayer = activePlayer === players[0] ? players[1] : players[0];
     }
+    const getActivePlayer = () => activePlayer;
+
+    const playRound = function (square) {
+        square.textContent = activePlayer.symbol;
+    }
+
+    function checkScore(board, player) {
+        for (let i = 0; i < 3; i++) {
+            if (board[i][0] == player.getPlayerSymbol() && board[i][1] == player.getPlayerSymbol() && board[i][2] == player.getPlayerSymbol()) {
+                console.log(`${player.getName()} wins!`);
+                return true;
+            }
+        }
+        for (let j = 0; j < 3; j++) {
+            if (board[0][j] == player.getPlayerSymbol() && board[1][j] == player.getPlayerSymbol() && board[2][j] == player.getPlayerSymbol()) {
+                console.log(`${player.getName()} wins!`);
+                return true;
+            }
+        }
+        if (board[0][0] === player.getPlayerSymbol() && board[1][1] === player.getPlayerSymbol() && board[2][2] === player.getPlayerSymbol()) {
+            console.log(`${player.getName()} wins!`);
+            return true;
+        }
+
+        if (board[0][2] === player.getPlayerSymbol() && board[1][1] === player.getPlayerSymbol() && board[2][0] === player.getPlayerSymbol()) {
+            console.log(`${player.getName()} wins!`);
+            return true;
+        }
+    }
+
+    // while (true) {
+    //     let overwriteFlag = true; //flag to check if cell is already taken
+
+    //     // player 1 turn
+    //     // let input = prompt(` ${player1.getName()} it's your turn!`);
+    //     screen.textContent = "Player One it's your turn!";
+
+    //     // board.flat().forEach(function (element) {
+    //     //     element.onclick = (function () {
+    //     //         this.textContent = player1.getPlayerSymbol();
+    //     //     })
+    //     // })
+    //     // let coordinates = input.split(/[\s,]+/);
+    //     // let row = coordinates[0];
+    //     // let col = coordinates[1];
+
+    //     // board[row][col] = `${player1.getName()}`;
+    //     if (checkScore(board, player1)) break;
+    //     // Check if board is full (for a draw)
+    //     count++;
+    //     if (count >= 9) {
+    //         screen.textContent("Game ends in a draw.");
+    //         break;
+    //     }
+
+    //     // player 2 turn
+    //     do {
+    //         screen.textContent = "Player Two it's your turn!";
+    //         board.flat().forEach(function (element) {
+    //             element.onclick = (function () {
+    //                 if (this.textContent == player1.getPlayerSymbol()) {
+    //                     screen.textContent("This square is taken! Choose another!")
+    //                     overwriteFlag = true;
+    //                 }
+    //                 else {
+    //                     overwriteFlag = false;
+    //                 }
+
+    //             })
+    //         })
+    //         // input = prompt(` ${player2.getName()} Please enter grid coordinates (x,y):`);
+    //         // coordinates = input.split(/[\s,]+/);
+    //         // row = coordinates[0];
+    //         // col = coordinates[1];
+
+    //         //checking to see if cell is taken
+    //         // if (board[row][col] == player1.getName()) {
+    //         //     console.log("This cell is taken, choosing another...");
+    //         //     overwriteFlag = true;
+    //         // }
+    //         // else {
+    //         //     overwriteFlag = false;
+    //         // }
+    //     } while (overwriteFlag);
+    //     this.textContent = player2.getPlayerSymbol();
+
+    //     // board[row][col] = `${player2.getName()}`;
+    //     if (checkScore(board, player2)) break;
+    //     // Check if board is full (for a draw)
+    //     count++;
+    //     if (count >= 9) {
+    //         screen.textContent("Game ends in a draw.");
+    //         break;
+    //     }
+    //     console.log(board);
+    // }
 };
 
 
 
 // gameController();
+
+
+
+const displayController = (function () {
+    const messageScreen = document.createElement("p");
+    messageScreen.textContent = "This is the message screen!";
+
+    const gridContainer = document.querySelector(".gridContainer");
+    for (let i = 0; i < 9; i++) {
+        const button = document.createElement("button");
+        button.classList.add("gridButton");
+        button.id = i + 1;
+        gridContainer.appendChild(button);
+    }
+    document.body.insertBefore(messageScreen, gridContainer);
+
+    const board = gameBoard;
+    console.log(board());
+
+    // return messageScreen;
+})();
 
 
 
