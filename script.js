@@ -112,33 +112,37 @@ const displayController = (function () {
         playButton.id = i + 1;
         gridContainer.appendChild(playButton);
         playButton.addEventListener("click", playClickHandler);
-        // button.textContent = "";
     }
     document.body.insertBefore(messageScreen, gridContainer);
     document.body.insertBefore(startButton, gridContainer);
     const board = gameBoard;
     const game = gameController("Player One", "Player Two", messageScreen);
+    playButtons = document.querySelectorAll(".playButton");
     messageScreen.textContent = `This is Tic-Tac-Toe! ${game.getActivePlayer().name}, you go first!`;
     startButton.addEventListener("click", startClickHandler);
     function winningSquares(list) {
         list.forEach(element => {
             element.classList.add("winningSquare");
-            // element.classList.remove("playButton");
         });
+        playButtons.forEach(element => {
+            element.style.pointerEvents = "none";
+        })
     }
     function resetSquares() {
-        playButtons = document.querySelectorAll(".playButton");
         playButtons.forEach(element => {
             element.classList.remove("winningSquare");
+            element.style.pointerEvents = "auto";
         })
     }
     function gameRoundUI(gameState) {
         switch (gameState) {
             case 2:
                 messageScreen.textContent = "It's a draw!! Press Start to play again!";
+                playButtons.forEach(element => {
+                    element.style.pointerEvents = "none";
+                })
                 break;
             case 3:
-                // game.switchPlayerTurn;
                 messageScreen.textContent = `${game.getActivePlayer().name} it's your turn!`;
                 break;
             default:
@@ -157,8 +161,6 @@ const displayController = (function () {
             messageScreen.textContent = `This square is taken! ${game.getActivePlayer().name} choose another one!!`
             return;
         }
-        // console.log("You Clicked!");
         gameRoundUI(game.playRound(selectedSquare, messageScreen));
     }
-    console.log(board());
 })();
