@@ -1,18 +1,5 @@
-
-/*
-      0 1 2| 3 4 5| 6 7 8 
-
-      0 1 2
-
-  0   1 2 3
-  1   4 5 6   
-  2   7 8 9
-*/
-
-
-
 const gameBoard = function () {
-    const buttonList = document.querySelectorAll("button");
+    const buttonList = document.querySelectorAll(".playButton");
     const rows = 3;
     const columns = 3;
     const board = [];
@@ -27,39 +14,9 @@ const gameBoard = function () {
     return board;
 };
 
-// function createPlayer(name, symbol) {
-//     const playerName = name;
-//     const playerSymbol = symbol;
-//     let playerCells = [];
-
-//     const getName = () => playerName;
-//     // const setCells = function (cellNumber) {
-//     //     playerCells.push(cellNumber);
-//     // }
-//     // const getCells = () => playerCells;
-//     const getPlayerSymbol = () => playerSymbol;
-
-//     const selectCell = function (board) {
-//         board.textContent = playerSymbol;
-//     }
-
-//     return { getName, getPlayerSymbol };
-// }
-
-
-
-
-
-
-
-
 function gameController(playerOneName, playerTwoName, screen) {
     let count = 0;
     const board = gameBoard;
-    // const player1 = createPlayer("Kimon", "X");
-    // const player2 = createPlayer("Machine", "O");
-    // const screen = displayController;
-
     const players = [
         {
             name: playerOneName,
@@ -70,7 +27,6 @@ function gameController(playerOneName, playerTwoName, screen) {
             symbol: "O"
         }
     ];
-
     let activePlayer = players[0];
     const switchPlayerTurn = () => {
         activePlayer = activePlayer === players[0] ? players[1] : players[0];
@@ -78,25 +34,33 @@ function gameController(playerOneName, playerTwoName, screen) {
     const getActivePlayer = () => activePlayer;
 
     function checkScore(board, playerSymbol, playerName, screen) {
+        let winSquares = [];
         for (let i = 0; i < 3; i++) {
             if (board[i][0].textContent == playerSymbol && board[i][1].textContent == playerSymbol && board[i][2].textContent == playerSymbol) {
-                return true;
+                for (let j = 0; j < 3; j++) {
+                    winSquares.push(board[i][j]);
+                }
+                return winSquares;
             }
         }
         for (let j = 0; j < 3; j++) {
             if (board[0][j].textContent == playerSymbol && board[1][j].textContent == playerSymbol && board[2][j].textContent == playerSymbol) {
-                return true;
+                for (let i = 0; i < 3; i++) {
+                    winSquares.push(board[i][j]);
+                }
+                return winSquares;
             }
         }
         if (board[0][0].textContent === playerSymbol && board[1][1].textContent === playerSymbol && board[2][2].textContent === playerSymbol) {
-            return true;
+            winSquares.push(board[0][0], board[1][1], board[2][2]);
+            return winSquares;
         }
 
         if (board[0][2].textContent === playerSymbol && board[1][1].textContent === playerSymbol && board[2][0].textContent === playerSymbol) {
-            return true;
+            winSquares.push(board[0][2], board[1][1], board[2][0]);
+            return winSquares;
         }
     }
-
     function checkForDraw(board) {
         let count = 0;
         for (let i = 0; i < 3; i++) {
@@ -106,161 +70,74 @@ function gameController(playerOneName, playerTwoName, screen) {
         }
         if (count >= 9) return true;
     }
-
-    const playRound = function (square, screen) {
+    function playRound(square, screen) {
         square.textContent = activePlayer.symbol;
         if (checkScore(board(), activePlayer.symbol, activePlayer.name, screen)) {
-            screen.textContent = `${activePlayer.name} wins!!`;
+            // screen.textContent = `${activePlayer.name} wins!!`;
+            return true;
         }
         else if (checkForDraw(board())) {
             screen.textContent = "It's a draw!!";
+            return true;
         }
         else {
             switchPlayerTurn();
             screen.textContent = `${activePlayer.name} it's your turn!`;
         }
     }
-
+    function resetGame(board) {
+        console.log("resetting....")
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                board[i][j].textContent = "";
+            }
+        }
+    }
     return {
         getActivePlayer,
         playRound,
-        checkScore
+        checkScore,
+        resetGame
     }
-
-    // while (true) {
-    //     let overwriteFlag = true; //flag to check if cell is already taken
-
-    //     // player 1 turn
-    //     // let input = prompt(` ${player1.getName()} it's your turn!`);
-    //     screen.textContent = "Player One it's your turn!";
-
-    //     // board.flat().forEach(function (element) {
-    //     //     element.onclick = (function () {
-    //     //         this.textContent = player1.getPlayerSymbol();
-    //     //     })
-    //     // })
-    //     // let coordinates = input.split(/[\s,]+/);
-    //     // let row = coordinates[0];
-    //     // let col = coordinates[1];
-
-    //     // board[row][col] = `${player1.getName()}`;
-    //     if (checkScore(board, player1)) break;
-    //     // Check if board is full (for a draw)
-    //     count++;
-    //     if (count >= 9) {
-    //         screen.textContent("Game ends in a draw.");
-    //         break;
-    //     }
-
-    //     // player 2 turn
-    //     do {
-    //         screen.textContent = "Player Two it's your turn!";
-    //         board.flat().forEach(function (element) {
-    //             element.onclick = (function () {
-    //                 if (this.textContent == player1.getPlayerSymbol()) {
-    //                     screen.textContent("This square is taken! Choose another!")
-    //                     overwriteFlag = true;
-    //                 }
-    //                 else {
-    //                     overwriteFlag = false;
-    //                 }
-
-    //             })
-    //         })
-    //         // input = prompt(` ${player2.getName()} Please enter grid coordinates (x,y):`);
-    //         // coordinates = input.split(/[\s,]+/);
-    //         // row = coordinates[0];
-    //         // col = coordinates[1];
-
-    //         //checking to see if cell is taken
-    //         // if (board[row][col] == player1.getName()) {
-    //         //     console.log("This cell is taken, choosing another...");
-    //         //     overwriteFlag = true;
-    //         // }
-    //         // else {
-    //         //     overwriteFlag = false;
-    //         // }
-    //     } while (overwriteFlag);
-    //     this.textContent = player2.getPlayerSymbol();
-
-    //     // board[row][col] = `${player2.getName()}`;
-    //     if (checkScore(board, player2)) break;
-    //     // Check if board is full (for a draw)
-    //     count++;
-    //     if (count >= 9) {
-    //         screen.textContent("Game ends in a draw.");
-    //         break;
-    //     }
-    //     console.log(board);
-    // }
 };
 
 
-
-// gameController();
-
-
-
 const displayController = (function () {
-
     const messageScreen = document.createElement("p");
-
+    const startButton = document.createElement("button");
+    startButton.classList.add("startBtn");
+    startButton.textContent = "Start Game";
     const gridContainer = document.querySelector(".gridContainer");
     for (let i = 0; i < 9; i++) {
-        const button = document.createElement("button");
-        button.classList.add("gridButton");
-        button.id = i + 1;
-        gridContainer.appendChild(button);
-        button.addEventListener("click", clickHandler);
+        const playButton = document.createElement("button");
+        playButton.classList.add("playButton");
+        playButton.id = i + 1;
+        gridContainer.appendChild(playButton);
+        playButton.addEventListener("click", playClickHandler);
         // button.textContent = "";
     }
     document.body.insertBefore(messageScreen, gridContainer);
-
+    document.body.insertBefore(startButton, gridContainer);
     const board = gameBoard;
     const game = gameController("Player One", "Player Two", messageScreen);
     messageScreen.textContent = `This is Tic-Tac-Toe! ${game.getActivePlayer().name}, you go first!`;
-
-    function clickHandler(e) {
+    startButton.addEventListener("click", startClickHandler);
+    function gameRoundUI() {
+        messageScreen.textContent = `${activePlayer.name} wins!!`;
+    }
+    function startClickHandler() {
+        game.resetGame(board());
+    }
+    function playClickHandler(e) {
         const selectedSquare = e.target;
         if (selectedSquare.textContent != "") {
-            console.log("Occupied!!")
+            messageScreen.textContent = `This square is taken! ${game.getActivePlayer().name} choose another one!!`
             return;
         }
-        console.log("You Clicked!");
-        game.playRound(selectedSquare, messageScreen);
-        // game.checkScore(board(), game.getActivePlayer().symbol, game.getActivePlayer().name);
-        // if (game.checkScore(board(), game.getActivePlayer().symbol, game.getActivePlayer().name)) {
-        //     screen.textContent = "Game is over!";
-        // }
+        // console.log("You Clicked!");
+        if (game.playRound(selectedSquare, messageScreen)) {
+            gameRoundUI();
+        }
     }
-
-
-
-
     console.log(board());
-
-    // return messageScreen;
 })();
-
-
-
-// mapping a 1d array to a 2d array
-// function boardCheck() {
-//     const singleBoard = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-
-//     const doubleBoard = [];
-//     let count = 0;
-
-//     for (let i = 0; i < 3; i++) {
-//         doubleBoard[i] = [];
-//         for (let j = 0; j < 3; j++) {
-//             doubleBoard[i][j] = singleBoard[count];
-//             count++
-//         }
-//     }
-
-//     console.log(singleBoard);
-//     console.log(doubleBoard);
-// }
-
-// boardCheck();
