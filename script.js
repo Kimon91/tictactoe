@@ -77,42 +77,48 @@ function gameController(playerOneName, playerTwoName, screen) {
     }
     const getActivePlayer = () => activePlayer;
 
-    const playRound = function (square) {
-        square.textContent = activePlayer.symbol;
-        switchPlayerTurn();
-        screen.textContent = `${activePlayer.name} it's your turn!`;
-    }
-
-    function checkScore(board, playerSymbol, playerName) {
+    function checkScore(board, playerSymbol, playerName, screen) {
         for (let i = 0; i < 3; i++) {
             if (board[i][0].textContent == playerSymbol && board[i][1].textContent == playerSymbol && board[i][2].textContent == playerSymbol) {
-                console.log(`${playerName} wins!`);
                 return true;
             }
         }
         for (let j = 0; j < 3; j++) {
             if (board[0][j].textContent == playerSymbol && board[1][j].textContent == playerSymbol && board[2][j].textContent == playerSymbol) {
-                console.log(`${playerName} wins!`);
                 return true;
             }
         }
         if (board[0][0].textContent === playerSymbol && board[1][1].textContent === playerSymbol && board[2][2].textContent === playerSymbol) {
-            console.log(`${playerName} wins!`);
             return true;
         }
 
         if (board[0][2].textContent === playerSymbol && board[1][1].textContent === playerSymbol && board[2][0].textContent === playerSymbol) {
-            console.log(`${playerName} wins!`);
             return true;
         }
+    }
+
+    function checkForDraw(board) {
         let count = 0;
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
                 if (board[i][j].textContent != "") count++;
-                console.log(count);
             }
         }
         if (count >= 9) return true;
+    }
+
+    const playRound = function (square, screen) {
+        square.textContent = activePlayer.symbol;
+        if (checkScore(board(), activePlayer.symbol, activePlayer.name, screen)) {
+            screen.textContent = `${activePlayer.name} wins!!`;
+        }
+        else if (checkForDraw(board())) {
+            screen.textContent = "It's a draw!!";
+        }
+        else {
+            switchPlayerTurn();
+            screen.textContent = `${activePlayer.name} it's your turn!`;
+        }
     }
 
     return {
@@ -206,6 +212,7 @@ const displayController = (function () {
         button.id = i + 1;
         gridContainer.appendChild(button);
         button.addEventListener("click", clickHandler);
+        // button.textContent = "";
     }
     document.body.insertBefore(messageScreen, gridContainer);
 
@@ -215,12 +222,16 @@ const displayController = (function () {
 
     function clickHandler(e) {
         const selectedSquare = e.target;
-        if (selectedSquare.textContent != "") return;
-        console.log("You Clicked!");
-        game.playRound(selectedSquare);
-        if (game.checkScore(board, game.getActivePlayer().symbol, game.getActivePlayer().name)) {
-            screen.textContent = "Game is over!";
+        if (selectedSquare.textContent != "") {
+            console.log("Occupied!!")
+            return;
         }
+        console.log("You Clicked!");
+        game.playRound(selectedSquare, messageScreen);
+        // game.checkScore(board(), game.getActivePlayer().symbol, game.getActivePlayer().name);
+        // if (game.checkScore(board(), game.getActivePlayer().symbol, game.getActivePlayer().name)) {
+        //     screen.textContent = "Game is over!";
+        // }
     }
 
 
