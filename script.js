@@ -33,6 +33,10 @@ function gameController(playerOneName, playerTwoName, screen) {
     }
     const getActivePlayer = () => activePlayer;
 
+    function resetActivePlayer() {
+        activePlayer = players[0];
+    }
+
     function checkScore(board, playerSymbol, playerName, screen) {
         let winSquares = [];
         for (let i = 0; i < 3; i++) {
@@ -84,6 +88,7 @@ function gameController(playerOneName, playerTwoName, screen) {
         }
     }
     function resetGame(board) {
+        resetActivePlayer();
         console.log("resetting....")
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
@@ -154,6 +159,7 @@ const displayController = (function () {
     function startClickHandler() {
         game.resetGame(board());
         resetSquares();
+        messageScreen.textContent = `${game.getActivePlayer().name} it's your turn!`;
     }
     function playClickHandler(e) {
         const selectedSquare = e.target;
