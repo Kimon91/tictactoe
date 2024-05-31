@@ -49,3 +49,17 @@ body {
 p {
     font-size: 3rem;
 }
+
+.winningSquare {
+    background-color: rgb(255, 238, 0);
+    width: 1fr;
+    height: 10rem;
+    font-size: 8rem;
+}
+
+.winningSquare:hover {
+    background-color: rgb(255, 238, 0);
+    width: 1fr;
+    height: 10rem;
+    font-size: 8rem;
+}

@@ -73,16 +73,14 @@ function gameController(playerOneName, playerTwoName, screen) {
     function playRound(square, screen) {
         square.textContent = activePlayer.symbol;
         if (checkScore(board(), activePlayer.symbol, activePlayer.name, screen)) {
-            // screen.textContent = `${activePlayer.name} wins!!`;
-            return true;
+            return checkScore(board(), activePlayer.symbol, activePlayer.name, screen);
         }
         else if (checkForDraw(board())) {
-            screen.textContent = "It's a draw!!";
-            return true;
+            return 2;
         }
         else {
             switchPlayerTurn();
-            screen.textContent = `${activePlayer.name} it's your turn!`;
+            return 3;
         }
     }
     function resetGame(board) {
@@ -122,11 +120,36 @@ const displayController = (function () {
     const game = gameController("Player One", "Player Two", messageScreen);
     messageScreen.textContent = `This is Tic-Tac-Toe! ${game.getActivePlayer().name}, you go first!`;
     startButton.addEventListener("click", startClickHandler);
-    function gameRoundUI() {
-        messageScreen.textContent = `${activePlayer.name} wins!!`;
+    function winningSquares(list) {
+        list.forEach(element => {
+            element.classList.add("winningSquare");
+            // element.classList.remove("playButton");
+        });
+    }
+    function resetSquares() {
+        playButtons = document.querySelectorAll(".playButton");
+        playButtons.forEach(element => {
+            element.classList.remove("winningSquare");
+        })
+    }
+    function gameRoundUI(gameState) {
+        switch (gameState) {
+            case 2:
+                messageScreen.textContent = "It's a draw!! Press Start to play again!";
+                break;
+            case 3:
+                // game.switchPlayerTurn;
+                messageScreen.textContent = `${game.getActivePlayer().name} it's your turn!`;
+                break;
+            default:
+                messageScreen.textContent = `${game.getActivePlayer().name} wins! Press Start to play again!`;
+                winningSquares(gameState);
+                break;
+        }
     }
     function startClickHandler() {
         game.resetGame(board());
+        resetSquares();
     }
     function playClickHandler(e) {
         const selectedSquare = e.target;
@@ -135,9 +158,7 @@ const displayController = (function () {
             return;
         }
         // console.log("You Clicked!");
-        if (game.playRound(selectedSquare, messageScreen)) {
-            gameRoundUI();
-        }
+        gameRoundUI(game.playRound(selectedSquare, messageScreen));
     }
     console.log(board());
 })();
