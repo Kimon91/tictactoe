@@ -5,13 +5,17 @@
 }
 
 body {
-    background-color: aqua;
+    background-color: black;
     width: 100vw;
     height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+
+p {
+    color: white;
 }
 
 .gridContainer {
@@ -24,14 +28,14 @@ body {
 }
 
 .playButton {
-    background-color: pink;
+    background-color: rgb(235, 248, 245);
     width: 1fr;
     height: 10rem;
     font-size: 8rem;
 }
 
 .startBtn {
-    background-color: rgb(231, 255, 71);
+    background-color: rgb(254, 167, 27);
     width: 11rem;
     height: 6rem;
     margin-top: 2rem;
@@ -39,7 +43,7 @@ body {
 }
 
 .startBtn:hover {
-    background-color: rgb(200, 216, 92);
+    background-color: rgb(248, 240, 2);
 }
 
 .playButton:hover {
